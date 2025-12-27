@@ -48,8 +48,8 @@ void EnableANSIColors() {
 void main(){
   EnableANSIColors();
   printf(CLR_BOLD CLR_GREEN "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
-  printf( "||              P R O C E S S  E N U M E R A T O R              ||\n");
-  printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n" CLR_RESET);
+  printf(CLR_BOLD CLR_GREEN "||              P R O C E S S  E N U M E R A T O R              ||\n");
+  printf(CLR_BOLD CLR_GREEN "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n" CLR_RESET);
   /*
     CreateToolhelp32Snapshot Function (tlhelp32.h)
 
