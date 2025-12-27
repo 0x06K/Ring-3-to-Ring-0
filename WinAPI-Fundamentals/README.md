@@ -6,6 +6,8 @@ Here's every program you should build to master Windows APIs for malware develop
 
 ## **WEEK 1: Foundation APIs**
 
+### Day 1: Process Enumeration
+
 ### **Day 1: Process & System Information**
 1. **Process Enumerator** - List all running processes
    - APIs: `CreateToolhelp32Snapshot`, `Process32First`, `Process32Next`
@@ -21,6 +23,7 @@ Here's every program you should build to master Windows APIs for malware develop
 
 5. **System Info Printer** - Get system information
    - APIs: `GetSystemInfo`, `GetComputerNameA`, `GetVersionExA`
+
 
 ---
 
