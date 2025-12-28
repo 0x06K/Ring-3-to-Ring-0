@@ -19,7 +19,7 @@ Here’s a **refined table of Day 1 “Process Enumeration APIs only”**, categ
 | **Snapshot**     | `CreateToolhelp32Snapshot`, `Process32First`, `Process32Next` | Snapshot handle + iteration over processes              |
 | **PSAPI**        | `EnumProcesses`                                               | Returns array of PIDs                                   |
 | **Native**       | `NtQuerySystemInformation`                                    | Kernel-level enumeration via `SystemProcessInformation` |
-| **CSRSS / ALPC** | `CsrGetProcessId`, `NtConnectPort`                            | Direct query to process subsystem                       |
+| **CSRSS / ALPC** | `CsrGetProcessId`, `NtConnectPort`                            | Direct query to process subsystem(will work on it later)                       |
 
 ✅ This table includes only APIs that participate in the **enumeration itself**, regardless of whether they return some basic process info.
 
