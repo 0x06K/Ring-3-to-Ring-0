@@ -1,5 +1,5 @@
 
-### Day 1: Process Enumeration
+### Process Enumeration
 
 * **CreateToolhelp32Snapshot**
 * **Process32First**
@@ -23,4 +23,3 @@ Here’s a **refined table of Day 1 “Process Enumeration APIs only”**, categ
 
 ✅ This table includes only APIs that participate in the **enumeration itself**, regardless of whether they return some basic process info.
 
-If you want, I can also make a **super-minimal version showing only the ones that enumerate PIDs without any extra details**. Do you want me to do that?
