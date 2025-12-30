@@ -23,7 +23,7 @@ Used for process & module inspection through handles.
 ```
 EnumProcessModules
 EnumProcessModulesEx
-GetModuleBaseName
+GetModuleBaseNameA
 GetModuleFileNameEx
 GetModuleInformation
 ```
