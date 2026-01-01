@@ -21,8 +21,6 @@ Here's every program you should build to master Windows APIs for malware develop
 4. **Thread Enumerator** - List all threads in a process
    - APIs: `CreateToolhelp32Snapshot`, `Thread32First`, `Thread32Next`
 
-5. **System Info Printer** - Get system information
-   - APIs: `GetSystemInfo`, `GetComputerNameA`, `GetVersionExA`
 
 
 ---
