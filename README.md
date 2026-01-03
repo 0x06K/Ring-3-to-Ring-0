@@ -1,11 +1,10 @@
-# From the Shadows to the Source.
-2026 Goal: Project Shadow Walk.
 ### MalDevJournal
 This is my personal collection of malware development notes, tools, code snippets, and resources I explore and learn from. It’s my go-to place to keep everything organized and handy.
 
 # MalDevJournal - Techniques Database
 **2026 Goal: Project Shadow Walk**
 
+# MalDevJournal - Techniques Database
 ---
 
 ## **🔥 USER-MODE INJECTION & EXECUTION**
