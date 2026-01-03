@@ -1,12 +1,10 @@
-# MalDevJournal
+# **MalDevJournal.**
 This is my personal collection of malware development notes, tools, code snippets, and resources I explore and learn from. It’s my go-to place to keep everything organized and handy.
 
-## FROM THE SHADOWS TO SOURCE
-**2026 Goal: Project Shadow Walk**
+FROM THE SHADOWS TO SOURCE
+- 2026 Goal: **Project Shadow Walk**.
 
-## MalDevJournal - Techniques Database
----
-
+# **These are the techniques i am learning progressively.**
 ## **🔥 USER-MODE INJECTION & EXECUTION**
 
 ### Classic Injection (1-15)
