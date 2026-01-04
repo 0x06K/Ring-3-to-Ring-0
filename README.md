@@ -1,8 +1,16 @@
 # **MalDevJournal.**
+* **Learn OS internals (Windows/Linux)** — processes, memory, loaders; know the battlefield.
+* **Master execution models** — how code runs, not how exploits pop (trust abuse > bugs).
+* **Study malware anatomy** — execution → evasion → persistence → C2 (mentally, not tooling).
+* **Flip to defender brain** — read EDR/AV detections to know what *not* to trip.
+* **Stay ethical + lab-only** — sandbox everything; jail IRL, flex in theory.
+
 This is my personal collection of malware development notes, tools, code snippets, and resources I explore and learn from. It’s my go-to place to keep everything organized and handy.
 
 FROM THE SHADOWS TO SOURCE
 - 2026 Goal: **Project Shadow Walk**.
+
+
 
 # **These are the techniques i am learning progressively.**
 ## **🔥 USER-MODE INJECTION & EXECUTION**
