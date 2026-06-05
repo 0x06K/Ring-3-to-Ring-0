@@ -1,26 +1,17 @@
-#include <windows.h>
-#include <stdint.h>
-#include <stdio.h>
+#include "NtAllocateVirtualMemory.h"
 
-#include <windows.h>
-#include <stdint.h>
+uint64_t *ret[7] = {0};
+uint64_t stacksize[7] = {0};
+void *gadget;
+DWORD status;
+
+uint64_t *rsp;
+uint64_t *old_rsp;
+uint64_t *old_rbp;
 
 
-
-#define UWOP_PUSH_NONVOL 0
-#define UWOP_ALLOC_LARGE 1
-#define UWOP_ALLOC_SMALL 2
-#define UWOP_SET_FPREG 3
-#define UWOP_SAVE_NONVOL 4
-#define UWOP_SAVE_NONVOL_FAR 5
-#define UWOP_SAVE_XMM128 8
-#define UWOP_SAVE_XMM128_FAR 9
-#define UWOP_PUSH_MACHFRAME 10
-
-// Cleans up the arguments to naturally accept void* pointers
 void *FindUnwindInfo(void *hModule, void *lpProcVA)
 {
-    // Cast to uintptr_t internally for safe 64-bit address math
     uintptr_t moduleAddr = (uintptr_t)hModule;
     uintptr_t procAddr = (uintptr_t)lpProcVA;
 
@@ -110,33 +101,6 @@ unsigned long long GetFunctionStackFrameSize(void *unwindInfo)
     return stackSize + 8;
 }
 
-void *FindBytePatternEx(const void *start_addr, const void *end_addr, const uint8_t *pattern, const uint8_t *mask, uint32_t pattern_len)
-{
-    const uint8_t *start = (const uint8_t *)start_addr;
-    const uint8_t *end = (const uint8_t *)end_addr;
-
-    if (!start || !end || !pattern || !mask || pattern_len == 0)
-        return NULL;
-
-    for (const uint8_t *p = start; p <= end - pattern_len + 1; p++)
-    {
-        uint32_t i;
-        for (i = 0; i < pattern_len; i++)
-        {
-            if (mask[i] == 0x00)
-            {
-                continue;
-            }
-            if (p[i] != pattern[i])
-                break;
-        }
-        if (i == pattern_len)
-            return (void *)p;
-    }
-
-    return NULL;
-}
-
 void fillmyarray(uint64_t **ret, uint64_t *stacksize)
 {
     HANDLE hModule = GetModuleHandle("ntdll.dll");
@@ -150,9 +114,6 @@ void fillmyarray(uint64_t **ret, uint64_t *stacksize)
     ret[3] = (uint64_t *)((uint8_t *)hProc + 0x22E3);
     ret[2] = (uint64_t *)((uint8_t *)hProc + 0x3C3F);
 
-    // hProc = GetProcAddress(hModule, "memset");
-    // ret[2] = (uint64_t *)((uint8_t *)hProc);
-
     hProc = GetProcAddress(hModule, "RtlRegisterSecureMemoryCacheCallback");
     ret[1] = (uint64_t *)((uint8_t *)hProc + 0x14B1);
 
@@ -160,22 +121,13 @@ void fillmyarray(uint64_t **ret, uint64_t *stacksize)
     ret[0] = (uint64_t *)((uint8_t *)hProc + 0x8DA);
     for (uint8_t i = 0; i < 7; i++)
         stacksize[i] = GetFunctionStackFrameSize(FindUnwindInfo(hModule, ret[i]));
-    // ret[0] = (uint64_t *)((uint8_t *)hProc + 0x8E9);
 }
 
-void *gadget;
-uint64_t *ret[7] = {0};
-uint64_t stacksize[7] = {0};
-
-uint64_t *rsp;
-uint64_t *old_rsp;
-uint64_t *old_rbp;
-DWORD status;
 DWORD WINAPI SyscallThread(LPVOID param)
 {
 
     __asm__ volatile(
-        "mov %%rsp, %0\n\t" 
+        "mov %%rsp, %0\n\t"
         "mov %%rbp, %1\n\t"
         : "=r"(old_rsp), "=r"(old_rbp)
         :
@@ -186,6 +138,7 @@ DWORD WINAPI SyscallThread(LPVOID param)
     size_t total = 0;
     for (int i = 0; i < 7; i++)
         total += stacksize[i];
+    // uncomment the following loop if you want to fill stack with 0.
     // for(int i = 0; i < total; i++){
     //     ((PBYTE)rsp)[i] = 0;
     // }
@@ -198,51 +151,20 @@ DWORD WINAPI SyscallThread(LPVOID param)
     __asm__ volatile(
         "mov %0, %%rsp\n\t"
         "jmp syscall\n\t" ::"r"(rsp));
-    
+
     __asm__ volatile(
         ".global here\n\t"
         "here:\n\t"
-        "mov %%eax, %0\n\t" // 1. Grab the syscall status from EAX immediately
+        "mov %%eax, %0\n\t" // Graba the syscall status from EAX
         : "=r"(status));
 
     __asm__ volatile(
         "mov %0, %%rsp\n\t"
         "mov %1, %%rbp\n\t"
         :
-        : "r"((uint64_t *)old_rsp), "r"((uint64_t*)old_rbp)
-    );
+        : "r"((uint64_t *)old_rsp), "r"((uint64_t *)old_rbp));
     return status;
 }
 
-extern DWORD regionSize;
-extern void* baseAddress;
-void main()
-{
-    HMODULE hModule = GetModuleHandle("ntdll.dll");
-    FARPROC ntHproc = GetProcAddress(hModule, "NtAllocateVirtualMemory");
-    gadget = (void *)((uint8_t *)ntHproc);
 
-    fillmyarray(ret, stacksize);
 
-    HANDLE hThread = CreateThread(
-        NULL,    // default security
-        0x10000, // stack size — give it room
-        SyscallThread,
-        NULL,
-        0,
-        NULL);
-
-    if (hThread == NULL)
-    {
-        printf("CreateThread failed: %lu\n", GetLastError());
-        return;
-    }
-
-    WaitForSingleObject(hThread, INFINITE);
-    if(status == 0){
-        printf("%d BYTES Allocated AT: %p\nStatus Code: %X\n", regionSize, baseAddress, status);
-    } else{
-        printf("Failed To Allocate Memory. Error Code: %X", status);
-    }
-    CloseHandle(hThread);
-}

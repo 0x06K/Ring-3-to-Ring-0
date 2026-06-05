@@ -32,11 +32,9 @@ syscall:
 
     ; arg4 = &regionSize
     lea r9, [rel regionSize]
-
-    
     
     lea rax, [rel here]
-    mov [rsp+0x270], rax
+    mov [rsp+0x270], rax    ; return address for our ret gadget
     
     mov rax, [rel gadget]   ; 1. Load the 64-bit base address of 'args' into RAX
 
