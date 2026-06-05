@@ -369,3 +369,4 @@ FROM THE SHADOWS TO SOURCE
 
 👀 **if your goal is to write persistent malware immediately**, you **can** start with maldev **and learn exploitation later**. **Just know that your malware will be basic at first.**  
 
+# CallStackSpoofingPOC
